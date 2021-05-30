@@ -1,7 +1,9 @@
-defmodule NervesLiveReload.Application do
+defmodule NervesLiveReloadApplication do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
+
+  use Boundary, deps: [NervesLiveReloadWeb]
 
   use Application
 

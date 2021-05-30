@@ -17,6 +17,8 @@ defmodule NervesLiveReloadWeb do
   and import those modules here.
   """
 
+  use Boundary, deps: [NervesLiveReload], exports: [Endpoint]
+
   def controller do
     quote do
       use Phoenix.Controller, namespace: NervesLiveReloadWeb
