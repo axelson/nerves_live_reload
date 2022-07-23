@@ -11,10 +11,13 @@ defmodule NervesLiveReloadWeb.Endpoint do
   ]
 
   socket "/socket", NervesLiveReloadWeb.UserSocket,
+    partitions: 2,
     websocket: true,
     longpoll: false
 
-  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
+  socket "/live", Phoenix.LiveView.Socket,
+    partitions: 2,
+    websocket: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -29,7 +32,7 @@ defmodule NervesLiveReloadWeb.Endpoint do
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
-    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket, partitions: 1
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
