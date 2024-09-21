@@ -47,7 +47,8 @@ defmodule NervesLiveReload.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:exsync_lib, path: "~/dev/forks/exsync_lib"},
+      # {:exsync_lib, path: "~/dev/forks/exsync_lib"},
+      {:exsync_lib, github: "axelson/exsync_lib"},
     ]
   end
 
