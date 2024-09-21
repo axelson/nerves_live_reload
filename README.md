@@ -1,3 +1,15 @@
+*Warning*: This is currently more of a proof-of-concept and I'm not sure if or when I'll have the time and inclination to take it further.
+
+The idea behind NervesLiveReload is that as you edit files in your editor on your development machine, after being compiled those files are then sent to your nerves device and "hot reloaded" there.
+
+This works by using `:peer` to start a node on the remote machine and transfer configuration over to it.
+
+## Current status
+
+NervesLiveReload is isn't finished or documented. I don't currently have any plans to take it further.
+
+## Raw WIP notes
+
 Nerves Livebook (inky):
 
     iex --name "reload@192.168.1.4" --cookie nerves_livebook_cookie -S mix phx.server
