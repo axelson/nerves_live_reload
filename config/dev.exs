@@ -7,7 +7,10 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :nerves_live_reload, NervesLiveReloadWeb.Endpoint,
-  http: [port: 4000],
+  http: [
+    port: 4000,
+    transport_options: [socket_opts: [:inet6], num_acceptors: 2]
+  ],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -56,8 +59,9 @@ config :nerves_live_reload, NervesLiveReloadWeb.Endpoint,
     ]
   ]
 
-# Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, :console,
+  format: "$time $message\n",
+  metadata: [:request_id]
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

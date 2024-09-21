@@ -3,30 +3,45 @@ defmodule NervesLiveReloadApplication do
   # for more information on OTP Applications
   @moduledoc false
 
-  use Boundary, deps: [NervesLiveReloadWeb]
+  use Boundary, deps: [NervesLiveReloadWeb, NervesLiveReload]
 
   use Application
 
   def start(_type, _args) do
+    # beam_notify_options = [name: "nerves_live_reload", dispatcher: &NervesLiveReload.Server.handle_beam_notify/2]
+
     children = [
-      # Start the Telemetry supervisor
+      {Task.Supervisor, name: :nerves_live_reload_task_supervisor},
+      {Registry, keys: :duplicate, name: :nerves_live_reload_registry},
+      NervesLiveReload.Server,
+      # Beamnotify has moved into ex_sync_lib
+      # {BEAMNotify, beam_notify_options},
+      {ExSyncLib.DynamicSupervisor, name: :exsync_lib_supervisor},
       NervesLiveReloadWeb.Telemetry,
-      # Start the PubSub system
       {Phoenix.PubSub, name: NervesLiveReload.PubSub},
-      # Start the Endpoint (http/https)
       NervesLiveReloadWeb.Endpoint
-      # Start a worker by calling: NervesLiveReload.Worker.start_link(arg)
-      # {NervesLiveReload.Worker, arg}
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
+    attach_telemetry()
+
     opts = [strategy: :one_for_one, name: NervesLiveReload.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
+  defp attach_telemetry do
+    :ok =
+      :telemetry.attach_many(
+        "nerves-live-reload-telemetry-handler",
+        # TODO: Change this
+        [
+          [:exsync_lib, :compile, :start],
+          [:exsync_lib, :reload, :finish]
+        ],
+        &NervesLiveReload.TelemetryHandler.handle_event/4,
+        nil
+      )
+  end
+
   def config_change(changed, _new, removed) do
     NervesLiveReloadWeb.Endpoint.config_change(changed, removed)
     :ok
